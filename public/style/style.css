@@ -1,0 +1,324 @@
+@charset "utf-8";
+
+/* style.css */
+/* Afonso Roperto 2023 */
+
+/* Cores e Fontes 
+------------------------------------------------------*/
+
+:root {
+  /* Palete type hot (not used D) */
+  --corA: #e5e5e9;
+  --corB: #8d6478;
+  --corC: #aa0000;
+  --corD: #fcebba;
+  --corE: #ff4649;
+
+  /* <a> */
+  --cora: #1225d6;
+  --corh: #6f7be9;
+
+  /* Table */
+  --tfot: #96d4d480;
+  --tbth: #96d4d4;
+
+  /* Nav */
+  --navA: #bc2022;
+
+  /* Basic type cold*/
+  --basA: #ffffff;
+  --basB: #808080;
+  --basC: #3a5858;
+  --basD: #000000;
+  --basE: #8080809d;
+
+  --fonteA: Verdana, Geneva, Tahoma, sans-serif, "sans-serif";
+  /* used */
+}
+
+/* Media 
+------------------------------------------------------*/
+
+/* Smartphone Portrait */
+
+/* Smartphone Landscape 
+@media (min-width: 576px) {
+    body {
+        background-color: #3a5858;
+    }
+} */
+
+/* Tablet Portrait 
+@media (min-width: 768px) {
+    body {
+        background-color: #3a5858;
+    }
+} */
+
+/* Tablet Landscape 
+@media (min-width: 992px) {
+    body {
+        background-color: #3a5858;
+    }
+} */
+
+/* PC 
+@media (min-width: 1200px) {
+    body {
+        background-color: #3a5858;
+    }
+} */
+
+/* Page 
+------------------------------------------------------*/
+
+html,
+html * {
+  box-sizing: border-box;
+  /* box-sizing: defines how the width and height of an element are calculated: should they include padding and borders, or not.
+    border-box:	The width and height properties (and min/max properties) includes content, padding and border. */
+}
+
+/* Header and Nav 
+------------------------------------------------------*/
+
+header {
+  background-color: var(--basA);
+  color: var(--basB);
+  border-bottom: solid 1px;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  padding: 1vh 2vw 1vh 2vw;
+}
+
+nav {
+  display: block;
+}
+
+nav ul {
+  list-style-type: none;
+  text-align: right;
+}
+
+nav ul li {
+  display: inline-block;
+  margin-left: 1.5em;
+}
+
+nav ul li a {
+  font-size: 1em;
+  text-decoration: none;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navA);
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+}
+
+nav ul li a:hover {
+  outline: none;
+  border-bottom: 1px solid var(--navA);
+  text-decoration: none;
+}
+
+nav ul li a:visited {
+  outline: none;
+  color: var(--navA);
+}
+
+nav ul li a.active {
+  color: var(--basB);
+  border-bottom: none;
+}
+
+/* Body 
+------------------------------------------------------*/
+
+Body {
+  /* font property */
+  font-family: var(--fonteA);
+  font-size: 0.9vw;
+  /* vw e vh = 1/100 do viewport = altera */
+  /* font-size: 1em; (em = font-size atual = não altera) */
+  color: var(--basC);
+  background: var(--basA);
+
+  /* display: flex;
+    flex-direction: column; */
+}
+
+h1 {
+  font-size: 1.1vw;
+  font-weight: bolder;
+  text-transform: uppercase;
+  color: var(--corC);
+}
+
+h2 {
+  font-size: 0.9vw;
+  font-weight: bolder;
+  text-transform: uppercase;
+  padding-top: 1.2em;
+}
+
+p {
+  line-height: 30%;
+}
+
+a {
+  text-decoration: none;
+  color: var(--cora);
+}
+
+a:hover {
+  color: var(--corh);
+  text-decoration: underline;
+}
+
+article {
+  display: flex;
+}
+
+main {
+  padding: 1vw 2vw 1vw 2vw;
+}
+
+section {
+  /* background-color: white; */
+}
+
+.title {
+  font-size: 1vw;
+  font-weight: bolder;
+  text-transform: uppercase;
+}
+
+.old {
+  color: var(--basE);
+}
+
+.att {
+  color: var(--corE);
+}
+
+.red {
+  color: var(--corE);
+  font-weight: bolder;
+}
+
+.shadow {
+  color: var(--basE);
+}
+
+/* Footer 
+------------------------------------------------------*/
+
+footer {
+  background-color: var(--basA);
+  color: var(--basB);
+  border-top: solid 1px;
+  /* flex-shrink: 0; */
+  padding-top: 1vw;
+  text-align: center;
+  font-size: 0.7vw;
+}
+
+input:invalid {
+  border: red 1px solid;
+}
+
+/* Table 
+------------------------------------------------------*/
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  background-color: var(--tbth);
+  border: 1px solid var(--basD);
+}
+
+td {
+  border: 1px solid var(--basD);
+  padding: 5px;
+}
+
+table > Caption {
+  font-size: 0.7em;
+  text-align: right;
+  font-style: italic;
+  padding: 0em 0.5em 0.5em 0em;
+}
+
+table > tfoot > tr > td {
+  font-size: 0.7em;
+  text-align: right;
+  font-style: italic;
+  padding: 0.3em 0.5em 0.3em 0em;
+  background-color: var(--tfot);
+}
+
+/* Form 
+------------------------------------------------------*/
+
+fieldset {
+  border-color: var(--corB);
+  border-radius: 1em;
+  background-color: var(--corA);
+}
+
+.fieldset-title {
+  font-size: 0.9vw;
+  font-weight: bolder;
+  text-transform: uppercase;
+  color: var(--corB);
+  text-align: center;
+  /* background-color: var(--basA); */
+  text-shadow: 0.05em 0.05em 0.1em var(--basD);
+}
+
+.alert {
+  font-size: 0.7em;
+  text-align: left;
+  font-style: italic;
+  padding: 0em 0.5em 0.5em 0em;
+  color: var(--corC);
+}
+
+/* Card 
+------------------------------------------------------*/
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 5px;
+}
+
+.card a {
+  display: block;
+  margin: 5px 0;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.card a:hover {
+  text-decoration: underline;
+}
