@@ -2,21 +2,21 @@
 import logoEmpresa from './assets/logo-empresa.png';
 import HeaderMenu from './HeaderMenu.jsx';
 
-export default function Header() {
+// Alteração aqui: Recebemos 'paginaAtiva' vinda do componente pai (App.jsx)
+export default function Header({ paginaAtiva }) {
   const hoje = new Date().toLocaleDateString('pt-BR');
-  const paginaAtual = "estoque"; 
 
   return (
     <header>
       {/* Agrupamento da esquerda (Logo + Data) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1vw' }}>
         {/* Mudamos de 4% para 4vw (4% da largura da tela total), respeitando seu CSS */}
-        <img src={logoEmpresa} style={{ width: '4vw', height: 'auto' }} alt="Empório Roperto" />
+        <img src={logoEmpresa} style={{ width: '4.5vw', height: 'auto' }} alt="Empório Roperto" />
         <span className="old">{hoje}</span> 
       </div>
       
-      {/* O HeaderMenu agora injeta o <nav> e a <ul> perfeitamente */}
-      <HeaderMenu page={paginaAtual} />
+      {/* Ajuste aqui: Passamos a página em tempo real para o HeaderMenu mudar os destaques visuais */}
+      <HeaderMenu page={paginaAtiva} />
     </header>
   );
 }

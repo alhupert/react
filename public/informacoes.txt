@@ -1,0 +1,200 @@
+React Puro (Vite)
+-----------------
+Projetos:
+no raid Z:\javascript\react
+no ADM-CR-00 D:\Projects\react
+
+Mis informações:
+E:\22-next.js
+
+Como funciona sem SSR - Server-Side Rendering não há código rodando no servidor. 
+O servidor é apenas um "entregador de arquivos". 
+O usuário pede a página, o servidor entrega o HTML, CSS e JS estáticos, e o próprio navegador do usuário processa e monta tudo.
+Você não precisa instalar Node.js, npm, ou qualquer outra ferramenta de desenvolvimento no seu servidor Debian ou Windows.
+O processo de deploy é literalmente copiar e colar os arquivos da pasta dist/ para a pasta pública do seu servidor (seja via FTP, SFTP, compartilhamento de rede ou Git).
+
+Build
+Pensar no build como uma compilação é uma excelente analogia, embora no mundo do JavaScript o termo técnico mais preciso seja Bundling (Empacotamento) e Otimização.
+Quando você está programando em React com Vite, seu projeto tem dezenas de arquivos .jsx, .js, .css, imagens separadas, e milhares de arquivos dentro da pasta node_modules (as bibliotecas que você instalou). 
+O navegador web não entenderia toda essa bagunça diretamente de forma eficiente.
+O processo de npm run build faz o seguinte:
+1. Transpilação (Conversão de código)
+O navegador não entende código React nativamente (como as tags HTML misturadas com JavaScript chamadas JSX). O build traduz todo o seu código moderno e os componentes React para um JavaScript puro e antigo que qualquer navegador (Chrome, Safari, Edge, Firefox) consegue entender.
+2. Bundling (Empacotamento)
+O Vite pega aqueles seus 50 arquivos de componentes separados e os "junta" em um ou dois arquivos JavaScript gigantes (ou divididos inteligentemente). Em vez do navegador do usuário ter que fazer 100 downloads diferentes para carregar o site, ele faz apenas 2 ou 3.
+3. Minificação (Compactação extrema)
+O build remove tudo o que foi feito para humanos lerem, mas que o computador não precisa:
+Remove todos os espaços em branco e quebras de linha.
+Remove todos os comentários que você escreveu no código.
+Troca nomes de variáveis longas por letras únicas (ex: muda const listaDeUsuariosCadastrados para const l).
+O seu arquivo de código que tinha 10 KB passa a ter 2 KB, economizando internet do seu usuário.
+O index.html tem apenas uma linha chamando o arquivo .js. Quando o Apache ou IIS entrega esse HTML e esse JS para o navegador do funcionário da sua empresa, o JavaScript "desperta", cria as telas, os botões, faz as requisições para as suas APIs e o sistema funciona perfeitamente.
+
+O que você precisa para o DESENVOLVIMENTO
+Na sua máquina local (onde você vai programar), você só precisa de duas coisas:
+1. Node.js (LTS): Necessário apenas na sua máquina de trabalho para gerenciar os pacotes e rodar o servidor de desenvolvimento do Vite.
+	no terminal: node -v
+		v18.16.1 
+		Atualizar: 	https://nodejs.org/
+				botão verde
+				ultima LTS (long term suport)
+				so = windows
+				usando = default
+				com = npm
+				x64
+				instalador windows
+				executar
+				sem chocolatey
+		v24.15.0
+	------------------------------------------------------
+Aproveite e verifique o NPM (Gerenciador de Pacotes - Node Package Manager)
+	no terminal: npm -v
+		9.5.1
+		Depois da atualização acima
+		11.12.1	
+############ Explicxação do Node.js (LTS)
+Node.js é uma das ferramentas mais poderosas e versáteis do mundo. 
+Ele revolucionou o desenvolvimento de software porque permitiu fazer algo que antes era impossível: rodar JavaScript fora do navegador web (diretamente no computador ou no servidor).
+############ Fim da explicação do Node.js (LTS)
+2. Editor de Código: VS Code ou o de sua preferência.
+
+Comandos principais no terminal:
+Para criar o projeto:
+	npm create vite@latest meu-projeto-react -- --template react
+	cd meu-projeto-react
+	npm install
+Para programar (rodar localmente):
+	npm run dev
+		Este comando também serve para abrir um projeto já em desenvolvimento.
+		Atenção: o prompt do terminal tem que estar na pasta do projeto.
+	npm run dev -- --host
+		Se quizer acessar de outro computador na rede trocando localhost pelo ip e porta
+Para gerar os arquivos de produção:
+	npm run build
+Quando você roda o npm run build, o Vite cria uma pasta chamada dist/. 
+É o conteúdo dessa pasta (e apenas ele) que vai para os seus servidores.
+
+Produção no Servidor Linux / Debian (com Apache)
+O único detalhe importante para aplicações React (SPA Single Page Application) é configurar o roteamento. 
+Se o usuário atualizar a página em [meusite.com/dashboard](https://meusite.com/dashboard), o Apache vai tentar procurar uma pasta real chamada "dashboard". 
+Como ela não existe, ele dará erro 404. 
+Precisamos dizer ao Apache para redirecionar todas as rotas para o index.html.
+Passos:
+Copie todo o conteúdo da pasta dist/ do seu projeto para o diretório web do Apache (geralmente /var/www/html/ ou a pasta do seu VirtualHost).
+Ative o módulo de reescrita do Apache no terminal do servidor:
+	sudo a2enmod rewrite
+	sudo systemctl restart apache2
+		Para checar:
+		SSH
+		apache2ctl -M | grep rewrite
+		Se aparecer rewrite_module (shared) está ativo
+Crie um arquivo chamado .htaccess na raiz da pasta onde você colocou os arquivos do site e adicione a seguinte configuração:
+	Options -MultiViews
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^index\.html$ - [L]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule . /index.html [L]
+##---> Fiz no 35 dentro da /var/www/html/roperto.intranet/react
+
+Produção no Servidor Windows (com IIS)
+O raciocínio no IIS é exatamente o mesmo do Apache: precisamos servir os arquivos estáticos e garantir que as rotas internas do React funcionem sem dar erro 404.
+Pré-requisito no IIS:
+Você precisa ter a extensão URL Rewrite instalada no seu IIS. 
+Se não tiver, baixe e instale pelo Web Platform Installer ou direto do site da Microsoft.
+Copie o conteúdo da pasta dist/ para a pasta do seu site no Windows (ex: C:\inetpub\wwwroot\meu-app).
+Crie um arquivo chamado web.config na raiz dessa mesma pasta e adicione o seguinte conteúdo para gerenciar as rotas:
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <system.webServer>
+    <rewrite>
+      <rules>
+        <rule name="React Routes" stopProcessing="true">
+          <match url=".*" />
+          <conditions logicalGrouping="MatchAll">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+          </conditions>
+          <action type="Rewrite" url="./index.html" />
+        </rule>
+      </rules>
+    </rewrite>
+  </system.webServer>
+</configuration>
+Detalhe crucial se o site NÃO for a raiz do servidor
+Se o seu site for rodar em um subdiretório (ex: http://meuservidor/minha-intranet/), você precisa avisar o Vite antes de fazer o build, caso contrário os caminhos do CSS e JS vão quebrar.
+No seu arquivo vite.config.js, adicione a propriedade base:
+import { defineConfig } from 'vite'
+import react from '@vitejs/react-swc'
+export default defineConfig({
+  plugins: [react()],
+  base: '/minha-intranet/', // Adicione isso se não for rodar na raiz do domínio
+})
+Se for rodar direto na raiz (ex: [http://meusite.com](http://meusite.com)), não precisa mexer em nada, o padrão do Vite já resolve!
+
+Informações sobre o React
+O React é a biblioteca JavaScript mais popular do mundo para a construção de interfaces de usuário (UIs). 
+Criado pelo Meta (Facebook) em 2013, o grande diferencial do React é a sua abordagem baseada em Componentes.
+Em vez de construir uma página web como um único bloco gigante de HTML, o React permite que você quebre a tela em pedaços pequenos, isolados e reutilizáveis (como um botão, uma barra de navegação, ou um cartão de produto).
+Os Três Pilares do React
+Para entender o código do React, você precisa conhecer três conceitos básicos:
+1. Componentes: São funções JavaScript que retornam o visual da tela. Eles começam sempre com letra maiúscula (ex: func MyButton()).
+2. JSX (JavaScript XML): É a sintaxe do React que permite misturar HTML dentro do código JavaScript. É graças ao JSX que você pode escrever <h1>Olá</h1> direto no seu arquivo .jsx.
+3. State (Estado): É a memória do componente. Se você tem um carrinho de compras e o número de itens muda na tela, essa mudança acontece porque o "estado" do componente foi atualizado. O React percebe a mudança e redesenha a tela automaticamente.
+
+A Estrutura de Arquivos Padrão (Vite)
+Quando você cria um projeto React utilizando o Vite, ele gera uma estrutura de pastas muito limpa e otimizada. Vamos entender o que cada pasta e arquivo faz:
+meu-projeto-react/
+├── node_modules/         # Pastas e bibliotecas que o React usa (nunca mexa aqui)
+├── public/               # Arquivos estáticos puros (ícones, imagens globais)
+├── src/                  # A PASTA PRINCIPAL (onde você vai programar)
+│   ├── assets/           # Imagens, fontes e mídias usadas nos componentes
+│   ├── App.css           # Estilização global ou específica do componente App
+│   ├── App.jsx           # O COMPONENTE PRINCIPAL do seu sistema
+│   ├── index.css         # Estilos globais (fontes padrão, resets de margem)
+│   └── main.jsx          # O ponto de entrada (o arquivo que liga o React ao HTML)
+├── .gitignore            # Diz ao Git quais arquivos ele deve ignorar (como a node_modules)
+├── index.html            # O único arquivo HTML da sua SPA (Single Page Application)
+├── package.json          # Onde ficam anotados o nome do projeto e as bibliotecas instaladas
+└── vite.config.js        # Arquivo de configuração do construtor Vite
+
+O Fluxo de Funcionamento: Quem chama quem?
+Muitos iniciantes ficam perdidos tentando entender como o React joga as coisas na tela. 
+O caminho que o computador faz é o seguinte:
+O navegador lê o arquivo index.html da raiz. 
+Dentro dele, há uma linha chamando o arquivo src/main.jsx e uma linha com uma <div id="root"></div>.
+O arquivo main.jsx entra em ação. Ele pega o controle daquela div id="root" e diz: "React, renderize o componente <App/> aqui dentro".
+O arquivo App.jsx é o "orquestrador". Tudo o que você escrever dentro da função dele é o que o usuário verá no navegador.
+
+Na Prática: Como organizar seu projeto no dia a dia?
+Conforme o seu sistema de estoque (ou qualquer outro projeto) cresce, deixar tudo dentro da pasta src solto vira uma bagunça. A comunidade React costuma adotar uma organização de pastas dentro de src/ parecida com esta:
+src/
+├── assets/          # Imagens e logotipos
+├── components/      # Componentes pequenos e reutilizáveis (Botao.jsx, Input.jsx, Tabela.jsx)
+├── pages/           # As telas completas do sistema (Dashboard.jsx, Login.jsx, Estoque.jsx)
+├── services/        # Arquivos que fazem a conexão com suas APIs (buscar dados do MySQL/Debian)
+├── App.jsx          # Configuração de rotas e contextos globais
+└── main.jsx         # Ponto de partida
+
+Exemplo de um componente simples (src/components/Botao.jsx):
+// Um componente portátil que você pode usar em qualquer tela do sistema
+export default function Botao({ texto, acao }) {
+  return (
+    <button 
+      onClick={acao} 
+      style={{ padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+    >
+      {texto}
+    </button>
+  );
+}
+
+E para usar esse botão na sua página principal (App.jsx), bastaria fazer isso:
+
+
+
+
+
+
+
