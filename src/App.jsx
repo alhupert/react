@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Adicionado o useEffect para monitorar a carga do banco
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 import Info from './Info.jsx';
@@ -13,7 +13,10 @@ function App() {
   // 2. Estado para guardar qual grupo o usuário selecionou na combo de estoque
   const [grupoSelecionado, setGrupoSelecionado] = useState('');
 
-  // Lista de grupos (fictícios por enquanto, futuramente virá do MySQL)
+  // 3. ALTERAÇÃO: Agora a lista começa vazia e aguarda a resposta do MySQL via PHP
+  const [gruposDeProdutos, setGruposDeProdutos] = useState([]);
+
+  /* --- ABAIXO ESTÁ A SUA LISTA ANTIGA FICTÍCIA (COMENTADA PARA REFERÊNCIA) ---
   const gruposDeProdutos = [
     { id: 1, nome: "Vinhos e Espumantes" },
     { id: 2, nome: "Azeites e Vinagres" },
@@ -21,6 +24,26 @@ function App() {
     { id: 4, nome: "Queijos e Embutidos" },
     { id: 5, nome: "Conservas e Enlatados" }
   ];
+  -------------------------------------------------------------------------- */
+
+  // 4. ALTERAÇÃO: Efeito colateral para buscar os dados dinâmicos do banco
+  useEffect(() => {
+    // IMPORTANTE: Altere 'SUA_PASTA' para o caminho real onde salvou o buscar_grupos.php
+    fetch('http://192.168.90.36/roperto.intranet/conn/buscar_grupos.php')
+      .then((resposta) => {
+        if (!resposta.ok) {
+          throw new Error('Erro na rede ou o arquivo PHP não foi encontrado.');
+        }
+        return resposta.json();
+      })
+      .then((dados) => {
+        setGruposDeProdutos(dados); // injeta os dados da tabela 'estoque' no estado
+      })
+      .catch((erro) => {
+        console.error("Erro ao carregar os dados do MySQL:", erro);
+        alert("Não foi possível sincronizar as categorias com o banco de dados.");
+      });
+  }, []); // Mantém o colchete vazio para rodar apenas uma vez na inicialização
 
   // Função executada quando o usuário clica no botão para carregar os produtos
   const handleCarregarGrupo = (event) => {
@@ -43,7 +66,7 @@ function App() {
       <nav style={{ padding: '10px', background: '#eee', display: 'flex', gap: '10px' }}>
         <button onClick={() => setPaginaAtual('atrio')}>Home React</button>
         <button onClick={() => setPaginaAtual('estoque')}>Controle de Estoque</button>
-        <button onClick={() => setPaginaAtual('info')}>Informações</button>
+        <button onClick={() => setPaginaAtual('inforeact')}>Informações</button>
       </nav>
 
       <main style={{ padding: '20px' }}>
@@ -114,8 +137,8 @@ function App() {
           </div>
         )}
 
-        {/* CASO 3: Se a página atual for 'info' */}
-        {paginaAtual === 'info' && (
+        {/* CASO 3: Se a página atual for 'inforeact' */}
+        {paginaAtual === 'inforeact' && (
           <div>
             <h1>Informações</h1>
             <p>Atualização manual.</p>
