@@ -1,0 +1,12 @@
+http://192.168.90.36/conn/buscar_grupos.php
+http://192.168.90.36/roperto.intranet/conn/buscar_grupos.php
+http://192.168.90.36/roperto.intranet/conn/buscar_produtos.php
+http://192.168.90.36/roperto.intranet/conn/buscar_produtos.php?grupoId=1
+
+curl -X POST http://192.168.90.36/roperto.intranet/conn/movimentar_estoque.php \
+  -H "Content-Type: application/json" \
+  -d '{"idproduto": 1, "movimento": 100, "tipo": "entrada"}'
+
+no projeto tem a movimentação do estoque mas não funcionou então testei no terminal o código acima e funcionou (ver banco de dados)
+
+Só falta acertar o app.jsx no botão.
