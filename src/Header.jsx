@@ -10,7 +10,7 @@ export default function Header({ paginaAtiva }) {
     <header>
       {/* Agrupamento da esquerda (Logo + Data) */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1vw' }}>
-        {/* Mudamos de 4% para 4vw (4% da largura da tela total), respeitando seu CSS */}
+        {/* Mudamos de 4% para 4.5vw (4% da largura da tela total), respeitando seu CSS */}
         <img src={logoEmpresa} style={{ width: '4.5vw', height: 'auto' }} alt="Empório Roperto" />
         <span className="old">{hoje}</span> 
       </div>
