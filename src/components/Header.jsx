@@ -1,5 +1,5 @@
 // src/Header.jsx
-import logoEmpresa from './assets/logo-empresa.png';
+import logoEmpresa from '../assets/logo-empresa.png';
 import HeaderMenu from './HeaderMenu.jsx';
 
 // Alteração aqui: Recebemos 'paginaAtiva' vinda do componente pai (App.jsx)

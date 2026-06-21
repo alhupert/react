@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 
-import Header from './Header.jsx';
-import Footer from './Footer.jsx';
-import Info from './Info.jsx';
-import Atrio from './Atrio.jsx';
+import Header from './components/Header.jsx';
+import Footer from './components/Footer.jsx';
+import Info from './components/Info.jsx';
+import Atrio from './components/Atrio.jsx';
 
 import './App.css';
 
