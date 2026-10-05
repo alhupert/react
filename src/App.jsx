@@ -61,48 +61,44 @@ function App() {
   }, []);
 
   // ==========================================
-  // BUSCA PRODUTOS DO GRUPO
+  // BUSCA PRODUTOS AUTOMATICAMENTE AO MUDAR O GRUPO
   // ==========================================
 
-  const handleCarregarGrupo = async (event) => {
-
-    event.preventDefault();
-
+  useEffect(() => {
     if (!grupoSelecionado) {
-
-      alert('Selecione um grupo.');
-
+      setProdutos([]);
       return;
     }
 
-    try {
+    const buscarProdutos = async () => {
+      try {
+        const resposta = await fetch(
+          `http://192.168.90.36/roperto.intranet/conn/buscar_produtos.php?grupoId=${grupoSelecionado}`
+        );
 
-      const resposta = await fetch(
-        `http://192.168.90.36/roperto.intranet/conn/buscar_produtos.php?grupoId=${grupoSelecionado}`
-      );
+        if (!resposta.ok) {
+          throw new Error('Erro ao buscar produtos.');
+        }
 
-      if (!resposta.ok) {
-        throw new Error('Erro ao buscar produtos.');
+        const dados = await resposta.json();
+
+        // adiciona campos auxiliares no React
+        const produtosPreparados = dados.map((produto) => ({
+          ...produto,
+          movimento: '',
+          tipo: 'entrada'
+        }));
+
+        setProdutos(produtosPreparados);
+
+      } catch (erro) {
+        console.error(erro);
+        alert('Falha ao carregar produtos.');
       }
+    };
 
-      const dados = await resposta.json();
-
-      // adiciona campos auxiliares no React
-      const produtosPreparados = dados.map((produto) => ({
-        ...produto,
-        movimento: '',
-        tipo: 'entrada'
-      }));
-
-      setProdutos(produtosPreparados);
-
-    } catch (erro) {
-
-      console.error(erro);
-
-      alert('Falha ao carregar produtos.');
-    }
-  };
+    buscarProdutos();
+  }, [grupoSelecionado]);
 
   // ==========================================
   // ALTERA QUANTIDADE DIGITADA
@@ -186,7 +182,7 @@ function App() {
         return;
       }
 
-      // atualiza a tabela visualmente
+      // atualiza a tabela visualmente sem o popup de alert
 
       setProdutos((listaAtual) =>
 
@@ -208,8 +204,6 @@ function App() {
           return item;
         })
       );
-
-      alert('Estoque atualizado com sucesso.');
 
     } catch (erro) {
 
@@ -280,8 +274,7 @@ function App() {
                 C a t e g o r i a
               </legend>
 
-              <form
-                onSubmit={handleCarregarGrupo}
+              <div
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -333,27 +326,11 @@ function App() {
 
                 {!grupoSelecionado && (
                   <span className="alert">
-                    * Escolha um grupo.
+                    * Escolha um grupo para listar os produtos.
                   </span>
                 )}
 
-                <button
-                  type="submit"
-
-                  style={{
-                    padding: '10px',
-                    backgroundColor: 'var(--navA)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Carregar Produtos
-                </button>
-
-              </form>
+              </div>
 
             </fieldset>
 
